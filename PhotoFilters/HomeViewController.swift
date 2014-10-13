@@ -8,7 +8,7 @@
 
 import UIKit
 
-class HomeViewController: UIViewController, GalleryDelegate {
+class HomeViewController: UIViewController, GalleryDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     
     @IBOutlet weak var mainPhotoImageView: UIImageView!
@@ -34,6 +34,20 @@ class HomeViewController: UIViewController, GalleryDelegate {
         }
         alertController.addAction(galleryAction)
         
+        // Camera Action
+        let cameraAction = UIAlertAction(title: "Camera", style: UIAlertActionStyle.Default) { (action) -> Void in
+            let imagePicker = UIImagePickerController()
+            imagePicker.allowsEditing = true
+            if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) {
+                imagePicker.sourceType = UIImagePickerControllerSourceType.Camera
+            } else {
+                imagePicker.sourceType = UIImagePickerControllerSourceType.SavedPhotosAlbum
+            }
+            imagePicker.delegate = self
+            self.presentViewController(imagePicker, animated: true, completion: nil)
+        }
+        alertController.addAction(cameraAction)
+        
         // Cancel action
         let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil)
         alertController.addAction(cancelAction)
@@ -48,8 +62,15 @@ class HomeViewController: UIViewController, GalleryDelegate {
         }
     }
     
+    // GalleryDelegate implementation
     func didSelectImage(image: UIImage) {
         self.mainPhotoImageView.image = image
+    }
+    
+    // UIImagePickerControllerDelegate implementation
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
+        self.mainPhotoImageView.image = info[UIImagePickerControllerEditedImage] as? UIImage
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
 
 }
