@@ -8,7 +8,7 @@
 
 import UIKit
 
-class HomeViewController: UIViewController {
+class HomeViewController: UIViewController, GalleryDelegate {
     
     
     @IBOutlet weak var mainPhotoImageView: UIImageView!
@@ -28,11 +28,28 @@ class HomeViewController: UIViewController {
         // Set up action sheet
         let alertController = UIAlertController(title: nil, message: "Choose an option", preferredStyle: UIAlertControllerStyle.ActionSheet)
         
+        // Gallery Action
+        let galleryAction = UIAlertAction(title: "Gallery", style: UIAlertActionStyle.Default) { (action) -> Void in
+            self.performSegueWithIdentifier("SHOW_GALLERY", sender: self)
+        }
+        alertController.addAction(galleryAction)
+        
         // Cancel action
         let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: nil)
         alertController.addAction(cancelAction)
         
         self.presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "SHOW_GALLERY" {
+            let destinationVC = segue.destinationViewController as GalleryViewController
+            destinationVC.delegate = self
+        }
+    }
+    
+    func didSelectImage(image: UIImage) {
+        self.mainPhotoImageView.image = image
     }
 
 }
