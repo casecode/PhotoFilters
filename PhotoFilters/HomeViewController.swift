@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AssetsLibrary
 
 class HomeViewController: UIViewController, GalleryDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
